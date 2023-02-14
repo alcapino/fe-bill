@@ -1,0 +1,6 @@
+env/
+.idea/
+client_secret.json
+creds.json
+temp.txt
+*.pdf
