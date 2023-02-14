@@ -1,5 +1,6 @@
 env/
 .idea/
+__pycache__/
 client_secret.json
 creds.json
 temp.txt
