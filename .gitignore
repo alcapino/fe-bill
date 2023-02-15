@@ -1,7 +1,8 @@
 env/
-.idea/
 __pycache__/
+*.pdf
+.idea/
+*Zone.Identifier
 client_secret.json
 creds.json
 temp.txt
-*.pdf

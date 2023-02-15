@@ -3,23 +3,41 @@ from settings import DOCS_ROOT, GCREDS
 import pygsheets, re
 import pandas as pd
 
-
-reader = PdfReader(DOCS_ROOT + "FEB.pdf")
+month = "FEB"
+reader = PdfReader(DOCS_ROOT + month + ".pdf")
 number_of_pages = len(reader.pages)
-page = reader.pages[0]
-text = page.extract_text()
+text = ""
+for i in range(number_of_pages):
+    page = reader.pages[i]
+    text += page.extract_text()
 
-# print(text)
+# # print(text)
 # f = open("temp.txt", "w")
 # f.write(text)
 # f.close()
-print("temp file written!")
+# print("temp file written!")
 
-month = re.search(r'(Termijnfactuur\s*)(\w*)', text).groups(1)
-print(month)
+# query since 14 Feb 10PM
+# Factuurnummer:\s*(?P<invoice_num>\d*)[\s\S]+Vervaldatum:\s*(?P<due_date>[\d\-]+)[\s\S]+Termijnfactuur\s*(?P<month>\w*)[\s\S]+Vaste leveringskosten\s+(?P<present_period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\s\S]{3}(?P<del_cost_novat>(?<=\n\€\n)[\d\,]+)[\s\S]{3}(?P<del_cost_wvat>(?<=\n\€\n)[\d\,]+)[\s\S]+ODE[\s\S]{1}[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2}[\s\S]{3}(?P<ode_novat>(?<=\n\€\n)[\d\,]+)[\s\S]{3}(?P<ode_wvat>(?<=\n\€\n)[\d\,]+)
+query = re.compile(
+    'Factuurnummer:\s*'
+    '(?P<invoice_num>\d*)[\s\S]+Vervaldatum:\s*'
+    '(?P<due_date>[\d\-]+)[\s\S]+Termijnfactuur\s*'
+    '(?P<month>\w*)[\s\S]+Vaste leveringskosten\s+'
+    '(?P<present_period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\s\S]{3}'
+    '(?P<del_cost_novat>(?<=\n\€\n)[\d\,]+)[\s\S]{3}'
+    '(?P<del_cost_wvat>(?<=\n\€\n)[\d\,]+)[\s\S]+ODE[\s\S]{1}[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2}[\s\S]{3}'
+    '(?P<ode_novat>(?<=\n\€\n)[\d\,]+)[\s\S]{3}'
+    '(?P<ode_wvat>(?<=\n\€\n)[\d\,]+)\sVermindering energiebelasting\s[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2}[\s\S]{3}'
+    '(?P<reduc_novat>(?<=\n\€\n)[\-\d\,]+)'
+    '')
+
+q = query.search(text)
+print(q.group('present_period'))
+# print(month)
+# print(invoice_num)
 
 #authorization
-# gc = pygsheets.authorize(service_file=GCREDS)
 gc = pygsheets.authorize(service_file=GCREDS)
 
 # Create empty dataframe
@@ -29,11 +47,10 @@ df = pd.DataFrame()
 df['name'] = ['John', 'Steve', 'Sarah']
 
 #open the google spreadsheet (where 'PY to Gsheet Test' is the name of my sheet)
-sh = gc.open('PY to Gsheet Test')
+sh = gc.open('Utilities Dashboard')
+# print(sh.sheets)
 
-#select the first sheet
-wks = sh[0]
+wks = sh.worksheet('title','Copy of '+ month)
 
-#update the first sheet with df, starting at cell B2.
-wks.set_dataframe(df,(1,1))
-print('sheets created!')
+wks.update_value('B4',q.group('present_period'))
+print('sheets updated!')
