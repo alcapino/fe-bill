@@ -4,13 +4,13 @@ GSPREADSHEET = 'Utilities Dashboard'
 EAN_ELECTRIC = r'(?P<EAN_el>(?<=\nEAN[\W]{2}elektriciteit\n:\n)[\d]+)'
 EAN_GAS = r'(?P<EAN_gas>(?<=\nEAN[\W]{2}gas\n:\n)[\d]+)'
 COVER_EXTRA = r'Dekking extra maand\n' \
-              r'(?P<cover_extra_period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\W]{3}' \
-              r'(?P<cover_extra_novat>(?<=€\n)[\d\,]+)[\W]{3}' \
-              r'(?P<cover_extra_wvat>(?<=€\n)[\d\,]+)'
+              r'(?P<period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\W]{3}' \
+              r'(?P<novat>(?<=€\n)[\d\,]+)[\W]{3}' \
+              r'(?P<wvat>(?<=€\n)[\d\,]+)'
 REFUND_EXTRA = r'Restitutie extra maand\n' \
-              r'(?P<refund_extra_period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\W]{3}' \
-              r'(?P<refund_extra_novat>(?<=€\n)[\d\,]+)[\W]{3}' \
-              r'(?P<refund_extra_wvat>(?<=€\n)[\d\,]+)'
+              r'(?P<period>[\d]{2}\-[\d]{2} t\/m [\d]{2}\-[\d]{2})[\W]{3}' \
+              r'(?P<novat>(?<=€\n)[\d\,]+)[\W]{3}' \
+              r'(?P<wvat>(?<=€\n)[\d\,]+)'
 BILL_QUERY = r'Klantnummer:\n' \
     r'(?P<customer_num>\d+)\nFactuurnummer:\n' \
     r'(?P<invoice_num>\d+)\nVervaldatum:\n' \
